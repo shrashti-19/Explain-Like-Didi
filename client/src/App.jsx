@@ -1,28 +1,40 @@
 import { useState } from "react";
 import './App.css';
 import didiAvatar from './assets/didi.png';
-
+import axios from 'axios';
 
 function App(){
   const [ message, setMessage] = useState([]);
   const [input, setInput] = useState('');
 
-  const handleSend = ()=>{
-    if(!input.trim()) return;
+  const handleSend = async () => {
+  if (!input.trim()) return;
 
-    //user message
+  const userMessage = { sender: 'user', text: input };
+  const didiTyping = { sender: 'didi', text: 'typing' };
 
-    const userMessage = {sender: 'user', text: input};
+  setMessage((prev) => [...prev, userMessage, didiTyping]);
+  setInput('');
 
-    const didiMessage = {
-      sender: 'didi',
-      text: 'typing',//later is replaced by real API response
-    };
+  try {
+    const response = await axios.post('http://localhost:5000/didi', {
+      prompt: input,
+    });
 
-    setMessage([...message, userMessage, didiMessage]);
-    setInput('');
-  };
+    const didiReply = response?.data?.reply || 'माफ करना, अभी मैं जवाब नहीं दे पा रही हूँ।';
 
+    setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: didiReply }]);
+    console.log('Gemini response:', response.data);
+  } catch (error) {
+    console.error('Gemini API error:', JSON.stringify(error.response?.data || error.message, null, 2));
+
+    if (error.response?.status === 429) {
+      setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'थोड़ी देर रुकिए, मैं अभी व्यस्त हूँ 😊' }]);
+    } else {
+      setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'माफ करना, कोई दिक्कत आ गई है।' }]);
+    }
+  }
+};
   return(
     <div className="container">
       <header>
