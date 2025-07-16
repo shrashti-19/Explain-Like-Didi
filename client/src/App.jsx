@@ -16,24 +16,44 @@ function App(){
   setMessage((prev) => [...prev, userMessage, didiTyping]);
   setInput('');
 
-  try {
-    const response = await axios.post('http://localhost:5000/didi', {
-      prompt: input,
+  try{
+    //feature1: contextual history
+
+    const filterMessages = message.filter(msg=> msg.text!=='typing');
+
+    const chatHistory = [
+      {
+        role: 'user',
+        parts: [{text: "तुम एक बड़ी बहन जैसी हो जो सरल भाषा में समझाती हो। हिंदी में बात करो।"}]
+      },
+      ...filterMessages.map((msg)=>({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        parts: [{text: msg.text}]
+      })),
+      {
+        role: 'user',
+        parts: [{text: input}]
+      }
+    ];
+
+    const response = await axios.post('http://localhost:5000/didi',{
+      contents: chatHistory
     });
 
     const didiReply = response?.data?.reply || 'माफ करना, अभी मैं जवाब नहीं दे पा रही हूँ।';
-
-    setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: didiReply }]);
-    console.log('Gemini response:', response.data);
-  } catch (error) {
-    console.error('Gemini API error:', JSON.stringify(error.response?.data || error.message, null, 2));
-
-    if (error.response?.status === 429) {
-      setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'थोड़ी देर रुकिए, मैं अभी व्यस्त हूँ 😊' }]);
-    } else {
-      setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'माफ करना, कोई दिक्कत आ गई है।' }]);
-    }
+    setMessage((prev)=> [...prev.slice(0,-1), {sender: 'didi', text: didiReply}]);
+    console.log('Gemini response', response.data);
+    
   }
+  catch (error) {
+      console.error('Gemini API error:', JSON.stringify(error.response?.data || error.message, null, 2));
+
+      if (error.response?.status === 429) {
+        setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'थोड़ी देर रुकिए, मैं अभी व्यस्त हूँ 😊' }]);
+      } else {
+        setMessage((prev) => [...prev.slice(0, -1), { sender: 'didi', text: 'माफ करना, कोई दिक्कत आ गई है।' }]);
+      }
+    }
 };
   return(
     <div className="container">
