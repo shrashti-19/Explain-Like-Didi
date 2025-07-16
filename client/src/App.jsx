@@ -6,6 +6,7 @@ import axios from 'axios';
 function App(){
   const [ message, setMessage] = useState([]);
   const [input, setInput] = useState('');
+  const [isListening, setIsListening] = useState(false);
 
   const handleSend = async () => {
   if (!input.trim()) return;
@@ -55,6 +56,41 @@ function App(){
       }
     }
 };
+
+const handleMicClick = () =>{
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech recognition is not supported in this browser.");
+    return;
+  }
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'hi-IN';
+  recognition.interimResults = false;
+  recognition.onStart=()=>{
+    setIsListening(true);
+    console.log("🎤 Listening...");
+    
+  }
+
+  recognition.onresult = (event) =>{
+    const transcripts = event.results[0][0].transcript;
+    console.log("🎧 Heard:", transcripts);
+    setInput(transcripts);
+    setIsListening(false);
+  }
+
+  recognition.onerror = (event)=>{
+    console.error("Mic error: ", event.error);
+    setIsListening(false);
+    
+  };
+
+  recognition.onend = ()=>{
+    setIsListening(false);
+  };
+
+  recognition.start();
+}
   return(
     <div className="container">
       <header>
@@ -84,8 +120,8 @@ function App(){
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button className="mic-button">
-            🎤
+        <button className= {`mic-button ${isListening ? 'glow' : ''}`} onClick={handleMicClick}>
+            {isListening ? '🎙️...' : '🎤'}
         </button>
 
 
