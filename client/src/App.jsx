@@ -17,6 +17,9 @@ function App(){
   const [chatTag, setChatTag] = useState('');
   const [tagFilter, setTagFilter] = useState('all');
 
+  // safe mode
+  const [safeMode, setSafeMode] = useState(false);
+
   const chatEndRef = useRef(null);
   const [showPinnedOnly, setShowPinnedOnly]= useState(false);
 
@@ -50,7 +53,7 @@ function App(){
   if (!input.trim()) return;
 
   const timeStamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-  const userMessage = { sender: 'user', text: input, time: timeStamp,tag: chatTag, pinned: false};
+  const userMessage = { sender: 'user', text: input, time: timeStamp,tag: safeMode ? null : chatTag, pinned: false};
   const didiTyping = { sender: 'didi', text: 'typing', time: '' };
 
 
@@ -142,6 +145,7 @@ const handleMicClick = () =>{
 
 const handleDownload = ()=>{
   const chatText = message
+     .filter(msg=> !msg.safe)
      .map(msg=> `${msg.sender === 'user' ? '🧑‍🎓 You' : '👩‍🏫 Didi'}: ${msg.text}`)
      .join('\n\n');
 
@@ -158,7 +162,7 @@ const handleDownload = ()=>{
 
 //summarize handler 
 const handleSummarize = async ()=>{
-  const filterMessages = message.filter(msg =>msg.text!=='typing');
+  const filterMessages = message.filter(msg =>msg.text!=='typing' && !msg.safe);
   if(filterMessages.length===0){
     alert("कोई चैट नहीं है जिसे समझाया जा सके।");
     return;
@@ -318,6 +322,20 @@ const highlightMatch = (text)=>{
         <option value="other">🔖 Other</option>
 
       </select>
+
+      /*safe mode */
+      <div className="feature-toggles">
+        <label>
+          <input
+           type="checkbox"
+           checked={safeMode}
+           onChange={()=>setSafeMode(!safeMode)}
+          />
+          🛡️ Safe Mode (Ask anonymously)
+        </label>
+      </div>
+
+      /*input-bar */
       <div className="input-bar">
         <input
           type="text"
