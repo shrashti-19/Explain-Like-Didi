@@ -18,6 +18,7 @@ function App(){
   const [tagFilter, setTagFilter] = useState('all');
 
   const chatEndRef = useRef(null);
+  const [showPinnedOnly, setShowPinnedOnly]= useState(false);
 
   const speakHindi= (text)=>{
   if(!window.speechSynthesis) return;
@@ -49,7 +50,7 @@ function App(){
   if (!input.trim()) return;
 
   const timeStamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-  const userMessage = { sender: 'user', text: input, time: timeStamp,tag: chatTag};
+  const userMessage = { sender: 'user', text: input, time: timeStamp,tag: chatTag, pinned: false};
   const didiTyping = { sender: 'didi', text: 'typing', time: '' };
 
 
@@ -81,7 +82,7 @@ function App(){
     });
 
     const didiReply = response?.data?.reply || 'माफ करना, अभी मैं जवाब नहीं दे पा रही हूँ।';
-    const replyMessage = {sender: 'didi', text: didiReply, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})};
+    const replyMessage = {sender: 'didi', text: didiReply, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), pinned: false};
     setMessage((prev)=> [...prev.slice(0,-1), replyMessage]);
     speakHindi(didiReply);
     console.log('Gemini response', response.data);
@@ -247,11 +248,21 @@ const highlightMatch = (text)=>{
         <button onClick={()=> setTagFilter('all')} className={tagFilter==='other' ? 'active' : ''}>🔖 Other</button>
 
       </div>
+
+      
+      <div className="pin-filter">
+        <button onClick={()=> setShowPinnedOnly(!showPinnedOnly)}>
+          {showPinnedOnly ? '📄 Show All' : '📌 Show Pinned Only'}
+        </button>
+      </div>
+
+
       <div className="chat-box">
         {message
         .filter(msg => msg.text.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (filterBy === 'all' || msg.sender === filterBy) &&
-        (tagFilter === 'all' || msg.tag === tagFilter)
+        (tagFilter === 'all' || msg.tag === tagFilter) &&
+        (!showPinnedOnly || msg.pinned)
       )
         .map((msg,i)=>(
           <div key={i} className={`bubble ${msg.sender}`}>
@@ -265,6 +276,17 @@ const highlightMatch = (text)=>{
                   <div
                    dangerouslySetInnerHTML={{__html: highlightMatch(msg.text)}}
                   />
+                  <button 
+                    className= {`pin-btn ${msg.pinned ? 'pinned' : ''}`}
+                    onClick={()=>{
+                      const updated = [...message];
+                      updated[i].pinned = !updated[i].pinned;
+                      setMessage(updated);
+                    }}
+                    title={msg.pinned ? "Unpin this message" : "Pin this message"}
+                    >
+                      📌
+                    </button>
                 {msg.sender === 'didi' && (
                   <button
                   className="copy-btn"
