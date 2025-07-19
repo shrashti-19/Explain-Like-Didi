@@ -23,6 +23,9 @@ function App(){
   //motivational booster
   const [boostMode, setBoostMode] = useState(false);
 
+  //saftey toolkit
+  const [showToolKit, setShowToolKit] = useState(false);
+
   const chatEndRef = useRef(null);
   const [showPinnedOnly, setShowPinnedOnly]= useState(false);
 
@@ -244,6 +247,14 @@ const highlightMatch = (text)=>{
           {isDarkMode ? '🌞 Light' : '🌙 Dark'}
         </button>
 
+        <button 
+         className="toolkit-toggle"
+         onClick={()=> setShowToolKit(!showToolKit)
+         }
+        >
+          🛡️ सुरक्षा टूलकिट
+        </button>
+
         <img src={didiAvatar} alt="Didi" className="avatar" />
         <h1>Explain Like Didi</h1>
       </header>
@@ -260,6 +271,20 @@ const highlightMatch = (text)=>{
         <button onClick={()=> setFilterBy('user')} className= {filterBy === 'user' ? 'active' : ''}>🧑‍🎓 You</button>
         <button onClick={()=> setFilterBy('didi')} className= {filterBy === 'didi' ? 'active' : ''}>👩‍🏫 Didi</button>
       </div>
+
+      /* safety toolkit */
+      {showToolKit && (
+        <div className="toolkit-box">
+          <h3>🛡️ सुरक्षा और अधिकार टूलकिट</h3>
+          <ul>
+            <li>📞 <strong>महिला हेल्पलाइन:</strong>1091</li>
+            <li>🚨 <strong>आपातकालीन सेवा:</strong>112</li>
+            <li>📘 <strong>कानूनी अधिकार:</strong>शादी, काम, घरेलू हिंसा से संबंधित अधिकार</li>
+            <li>🔐 <strong>ऑनलाइन सुरक्षा:</strong> सोशल मीडिया पर प्राइवेसी सेटिंग्स का ध्यान रखें</li>
+            <li>🧠 <strong>हेल्थ टिप:</strong> मानसिक स्वास्थ्य भी जरूरी है - आत्म-संवाद करो ❤️</li>
+          </ul>
+        </div>
+      )}
       <div className="tag-filter">
         <span>🎯 Filter by tag:</span>
         <button onClick={()=> setTagFilter('all')} className={tagFilter==='all' ? 'active' : ''}>All</button>

@@ -326,3 +326,27 @@ mark{
 .pin-btn.pinned{
   color: gold;
 }
+
+
+.toolkit-box{
+  background-color: #fff8e1;
+  border: 1px solid #ffd54f;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+.toolkit-box h3{
+  margin-bottom: 0.5rem;
+}
+
+.toolkit-box ul{
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.toolkit-box li{
+  margin-bottom: 0.5rem;
+}
+
