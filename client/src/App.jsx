@@ -20,6 +20,9 @@ function App(){
   // safe mode
   const [safeMode, setSafeMode] = useState(false);
 
+  //motivational booster
+  const [boostMode, setBoostMode] = useState(false);
+
   const chatEndRef = useRef(null);
   const [showPinnedOnly, setShowPinnedOnly]= useState(false);
 
@@ -190,7 +193,21 @@ const handleSummarize = async ()=>{
       contents: chatHistory
     });
 
-    const didiReply = response?.data?.reply || 'माफ करना, मैं अभी सारांश नहीं दे पा रही हूँ।';
+    let didiReply = response?.data?.reply || 'माफ करना, मैं अभी सारांश नहीं दे पा रही हूँ।';
+
+    // if motivational mode is on
+    if(boostMode){
+      const didiMessageSoFar = message.filter(m=> m.sender === 'didi').length;
+      if((didiMessageSoFar+1)%3===0){
+        const boosters = [
+          "✨ तुम बहुत काबिल हो, खुद पर भरोसा रखो!",
+          "🚀 तुम ये कर सकती हो, मैं तुम्हारे साथ हूँ!",
+          "🌟 अपने सपनों को सच करने की ताक़त तुममें है!",
+        ];
+        const randomBoost = boosters[Math.floor(Math.random() * boosters.length)];
+        didiReply +="\n\n" + randomBoost;
+      }
+    }
     const replyMessage = {
       sender: 'didi',
       text: didiReply,
@@ -332,6 +349,14 @@ const highlightMatch = (text)=>{
            onChange={()=>setSafeMode(!safeMode)}
           />
           🛡️ Safe Mode (Ask anonymously)
+        </label>
+        <label>
+          <input
+           type="checkbox"
+           checked = {boostMode}
+           onChange={()=> setBoostMode(!boostMode)}
+          />
+          💪 Motivational Boost
         </label>
       </div>
 
