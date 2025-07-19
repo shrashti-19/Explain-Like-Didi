@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import './App.css';
 import didiAvatar from './assets/didi.png';
 import axios from 'axios';
@@ -7,12 +7,48 @@ function App(){
   const [ message, setMessage] = useState([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [lastSpokenText, setLastSpokenText] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isDarkMode, setIsDarkMode]= useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBy, setFilterBy] = useState('all');
+  const [autoScroll, setAutoScroll] = useState(true);
+
+  const chatEndRef = useRef(null);
+
+  const speakHindi= (text)=>{
+  if(!window.speechSynthesis) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'hi-IN';
+  utterance.rate=1;
+  utterance.pitch=1;
+  utterance.onstart = () => setIsSpeaking(true);
+  utterance.onend = () =>setIsSpeaking(false);
+
+  speechSynthesis.speak(utterance);
+  setLastSpokenText(text);
+};
+  const handleReplay = ()=>{
+    if(lastSpokenText){
+      speakHindi(lastSpokenText);
+    }
+  };
+
+  const handleStop= ()=>{
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
+
 
   const handleSend = async () => {
+    speechSynthesis.cancel();
+
   if (!input.trim()) return;
 
-  const userMessage = { sender: 'user', text: input };
-  const didiTyping = { sender: 'didi', text: 'typing' };
+  const timeStamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  const userMessage = { sender: 'user', text: input, time: timeStamp};
+  const didiTyping = { sender: 'didi', text: 'typing', time: '' };
+
 
   setMessage((prev) => [...prev, userMessage, didiTyping]);
   setInput('');
@@ -42,7 +78,9 @@ function App(){
     });
 
     const didiReply = response?.data?.reply || 'माफ करना, अभी मैं जवाब नहीं दे पा रही हूँ।';
-    setMessage((prev)=> [...prev.slice(0,-1), {sender: 'didi', text: didiReply}]);
+    const replyMessage = {sender: 'didi', text: didiReply, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})};
+    setMessage((prev)=> [...prev.slice(0,-1), replyMessage]);
+    speakHindi(didiReply);
     console.log('Gemini response', response.data);
     
   }
@@ -56,6 +94,12 @@ function App(){
       }
     }
 };
+
+  useEffect(()=>{
+    if(autoScroll){
+      chatEndRef.current?.scrollIntoView({behavior: 'smooth'});
+    }
+  },[message, autoScroll]);
 
 const handleMicClick = () =>{
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,15 +135,112 @@ const handleMicClick = () =>{
 
   recognition.start();
 }
+
+const handleDownload = ()=>{
+  const chatText = message
+     .map(msg=> `${msg.sender === 'user' ? '🧑‍🎓 You' : '👩‍🏫 Didi'}: ${msg.text}`)
+     .join('\n\n');
+
+  const blob = new Blob([chatText], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'didi_chat.txt';
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+//summarize handler 
+const handleSummarize = async ()=>{
+  const filterMessages = message.filter(msg =>msg.text!=='typing');
+  if(filterMessages.length===0){
+    alert("कोई चैट नहीं है जिसे समझाया जा सके।");
+    return;
+  }
+
+  const chatHistory = [
+    {
+      role:'user',
+      parts: [{text: "तुम एक बड़ी बहन जैसी हो जो सरल भाषा में समझाती हो। हिंदी में बात करो।"}]
+    },
+    ...filterMessages.map(msg=>({
+      role: msg.sender === 'user' ? 'user': 'model',
+      parts: [{text: msg.text}]
+    })),
+
+    {
+      role: 'user',
+      parts: [{text : "ऊपर के पूरे चैट को सरल भाषा में समझाओ।"}]
+    }
+  ];
+
+  setMessage(prev=> [...prev, {sender: 'didi', text: 'typing', time: ''}]);
+  try{
+    const response = await axios.post('http://localhost:5000/didi',{
+      contents: chatHistory
+    });
+
+    const didiReply = response?.data?.reply || 'माफ करना, मैं अभी सारांश नहीं दे पा रही हूँ।';
+    const replyMessage = {
+      sender: 'didi',
+      text: didiReply,
+      time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+    };
+
+    setMessage(prev=>[...prev.slice(0,-1),replyMessage]);
+    speakHindi(didiReply);
+  }catch(error){
+    console.error("Gemini error:", error);
+    setMessage(prev=>[...prev.slice(0,-1),{
+      sender: 'didi',
+      text: 'माफ करना, कोई समस्या आ गई है।',
+      time: ''
+    }]);
+    
+  }
+};
+
+
+const highlightMatch = (text)=>{
+  if(!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  return text.replace(regex, '<mark>$1</mark>');
+};
+
   return(
-    <div className="container">
+    <div className={`container ${isDarkMode ? 'dark' : ''}`}>
       <header>
+        <button className="scroll-toggle" onClick={()=> setAutoScroll(!autoScroll)}>
+          {autoScroll ? '⏸️ Pause Scroll' : '▶️ Resume Scroll'}
+        </button>
+        <button className="theme-toggle" onClick={()=> setIsDarkMode(!isDarkMode)}>
+          {isDarkMode ? '🌞 Light' : '🌙 Dark'}
+        </button>
+
         <img src={didiAvatar} alt="Didi" className="avatar" />
         <h1>Explain Like Didi</h1>
       </header>
-
+      <div className="search-bar">
+        <input
+         type="text"
+         placeholder="संदेशों में खोजें..."
+         value={searchTerm}
+         onChange={(e)=> setSearchTerm(e.target.value)}
+         />
+      </div>
+      <div className="filter-button">
+        <button onClick={()=> setFilterBy('all')} className= {filterBy === 'all' ? 'active' : ''}>👥 All</button>
+        <button onClick={()=> setFilterBy('user')} className= {filterBy === 'user' ? 'active' : ''}>🧑‍🎓 You</button>
+        <button onClick={()=> setFilterBy('didi')} className= {filterBy === 'didi' ? 'active' : ''}>👩‍🏫 Didi</button>
+      </div>
       <div className="chat-box">
-        {message.map((msg,i)=>(
+        {message
+        .filter(msg => msg.text.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (filterBy === 'all' || msg.sender === filterBy)
+      )
+        .map((msg,i)=>(
           <div key={i} className={`bubble ${msg.sender}`}>
             <div className="msg">
               {msg.text == 'typing' ? (
@@ -107,18 +248,37 @@ const handleMicClick = () =>{
                   <span>.</span><span>.</span><span>.</span>
                 </div>
               ) : (
-                msg.text
+                <>
+                  <div
+                   dangerouslySetInnerHTML={{__html: highlightMatch(msg.text)}}
+                  />
+                {msg.sender === 'didi' && (
+                  <button
+                  className="copy-btn"
+                  onClick={()=> navigator.clipboard.writeText(msg.text)}
+                  title="कॉपी करें"
+                  >
+                    📋
+                  </button>
+                )}
+                {msg.time && <div className="timestamp">{msg.time}</div>}
+                </>
               )}
             </div>
           </div>
         ))}
+        <div ref={chatEndRef}/>
       </div>
+
       <div className="input-bar">
         <input
           type="text"
           placeholder="पूछिए कुछ भी... (e.g. PF क्या होता है?)"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e)=>{
+            if(e.key === 'Enter') handleSend()
+          }}
         />
         <button className= {`mic-button ${isListening ? 'glow' : ''}`} onClick={handleMicClick}>
             {isListening ? '🎙️...' : '🎤'}
@@ -126,6 +286,19 @@ const handleMicClick = () =>{
 
 
         <button onClick={handleSend}>Send</button>
+        <button onClick={handleReplay} disabled={!lastSpokenText}>
+            🔈 Listen Again
+        </button>
+
+        <button onClick={handleStop} disabled={!isSpeaking}>
+            ⏹️ Stop
+        </button>
+        <button onClick={handleDownload}>
+           📥 Save Chat
+        </button>
+        <button onClick={handleSummarize}>
+           🧠 समझाओ पूरा चैट
+        </button>
       </div>
     </div>
   );
