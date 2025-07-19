@@ -13,6 +13,9 @@ function App(){
   const [searchTerm, setSearchTerm] = useState('');
   const [filterBy, setFilterBy] = useState('all');
   const [autoScroll, setAutoScroll] = useState(true);
+  //tagging of chat
+  const [chatTag, setChatTag] = useState('');
+  const [tagFilter, setTagFilter] = useState('all');
 
   const chatEndRef = useRef(null);
 
@@ -46,7 +49,7 @@ function App(){
   if (!input.trim()) return;
 
   const timeStamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-  const userMessage = { sender: 'user', text: input, time: timeStamp};
+  const userMessage = { sender: 'user', text: input, time: timeStamp,tag: chatTag};
   const didiTyping = { sender: 'didi', text: 'typing', time: '' };
 
 
@@ -235,10 +238,20 @@ const highlightMatch = (text)=>{
         <button onClick={()=> setFilterBy('user')} className= {filterBy === 'user' ? 'active' : ''}>🧑‍🎓 You</button>
         <button onClick={()=> setFilterBy('didi')} className= {filterBy === 'didi' ? 'active' : ''}>👩‍🏫 Didi</button>
       </div>
+      <div className="tag-filter">
+        <span>🎯 Filter by tag:</span>
+        <button onClick={()=> setTagFilter('all')} className={tagFilter==='all' ? 'active' : ''}>All</button>
+        <button onClick={()=> setTagFilter('finance')} className={tagFilter==='finance' ? 'active' : ''}>💰 Finance</button>
+        <button onClick={()=> setTagFilter('all')} className={tagFilter==='education' ? 'active' : ''}>📚 Education</button>
+        <button onClick={()=> setTagFilter('all')} className={tagFilter==='personal' ? 'active' : ''}>👤 Personal</button>
+        <button onClick={()=> setTagFilter('all')} className={tagFilter==='other' ? 'active' : ''}>🔖 Other</button>
+
+      </div>
       <div className="chat-box">
         {message
         .filter(msg => msg.text.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (filterBy === 'all' || msg.sender === filterBy)
+        (filterBy === 'all' || msg.sender === filterBy) &&
+        (tagFilter === 'all' || msg.tag === tagFilter)
       )
         .map((msg,i)=>(
           <div key={i} className={`bubble ${msg.sender}`}>
@@ -261,6 +274,7 @@ const highlightMatch = (text)=>{
                     📋
                   </button>
                 )}
+                {msg.tag && <div className="chat-tag">🏷️ {msg.tag}</div>}
                 {msg.time && <div className="timestamp">{msg.time}</div>}
                 </>
               )}
@@ -270,6 +284,18 @@ const highlightMatch = (text)=>{
         <div ref={chatEndRef}/>
       </div>
 
+      <select 
+        value={chatTag}
+        onChange={(e)=> setChatTag(e.target.value)}
+        className="tag-select"
+      >
+        <option value="">🗂️ Tag this chat...</option>
+        <option value="finance">💰 Finance</option>
+        <option value="education">📚 Education</option>
+        <option value="personal">👤 Personal</option>
+        <option value="other">🔖 Other</option>
+
+      </select>
       <div className="input-bar">
         <input
           type="text"
