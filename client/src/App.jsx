@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import './App.css';
+import './App2.css';
 import didiAvatar from './assets/didi.png';
 import axios from 'axios';
+
 
 function App(){
   const [ message, setMessage] = useState([]);
@@ -29,9 +30,20 @@ function App(){
   const chatEndRef = useRef(null);
   const [showPinnedOnly, setShowPinnedOnly]= useState(false);
 
+  const [showGreeting, setShowGreeting] = useState(true);
+
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  function cleanTextForSpeech(text) {
+  // Remove emojis and most non-alphabetic symbols
+  return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+             .replace(/[^a-zA-Z0-9\s\u0900-\u097F.,!?]/g, ''); // keeps Hindi and basic punctuation
+  }
+
   const speakHindi= (text)=>{
   if(!window.speechSynthesis) return;
-  const utterance = new SpeechSynthesisUtterance(text);
+  const cleanText = cleanTextForSpeech(text);
+  const utterance = new SpeechSynthesisUtterance(cleanText);
   utterance.lang = 'hi-IN';
   utterance.rate=1;
   utterance.pitch=1;
@@ -167,6 +179,12 @@ const handleDownload = ()=>{
 }
 
 //summarize handler 
+const BOOST_MESSAGES = [
+  "✨ तुम बहुत काबिल हो, खुद पर भरोसा रखो!",
+  "🚀 तुम ये कर सकती हो, मैं तुम्हारे साथ हूँ!",
+  "🌟 अपने सपनों को सच करने की ताक़त तुममें है!",
+];
+
 const handleSummarize = async ()=>{
   const filterMessages = message.filter(msg =>msg.text!=='typing' && !msg.safe);
   if(filterMessages.length===0){
@@ -202,12 +220,7 @@ const handleSummarize = async ()=>{
     if(boostMode){
       const didiMessageSoFar = message.filter(m=> m.sender === 'didi').length;
       if((didiMessageSoFar+1)%3===0){
-        const boosters = [
-          "✨ तुम बहुत काबिल हो, खुद पर भरोसा रखो!",
-          "🚀 तुम ये कर सकती हो, मैं तुम्हारे साथ हूँ!",
-          "🌟 अपने सपनों को सच करने की ताक़त तुममें है!",
-        ];
-        const randomBoost = boosters[Math.floor(Math.random() * boosters.length)];
+        const randomBoost = BOOST_MESSAGES[Math.floor(Math.random() * BOOST_MESSAGES.length)];
         didiReply +="\n\n" + randomBoost;
       }
     }
@@ -233,13 +246,49 @@ const handleSummarize = async ()=>{
 
 const highlightMatch = (text)=>{
   if(!searchTerm) return text;
-  const regex = new RegExp(`(${searchTerm})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
+  const parts = text.split(new RegExp(`(${searchTerm})`,'gi'));
+  return parts.map((part,i)=>
+    part.toLowerCase() === searchTerm.toLowerCase() ? <mark key={i}>{part}</mark>: part
+  );
 };
 
   return(
-    <div className={`container ${isDarkMode ? 'dark' : ''}`}>
-      <header>
+    <>
+    {showGreeting ? (
+      <div className="greeting-screen">
+        <h1>नमस्ते! 😊</h1>
+        <p>Explain Like Didi में आपका स्वागत है — यहाँ हर सवाल का सरल जवाब मिलेगा।</p>
+        <button onClick={()=> setShowGreeting(false)}>चलो शुरू करें!</button>
+      </div>
+    ):(
+     <div className={`app-wrapper ${isDarkMode ? 'dark' : ''}`}>
+       <aside className = {`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+        <h3>🔍 Filters</h3>
+        <button onClick={() => setFilterBy('all')} className={filterBy === 'all' ? 'active' : ''}>👥 All</button>
+        <button onClick={() => setFilterBy('user')} className={filterBy === 'user' ? 'active' : ''}>🧑‍🎓 You</button>
+        <button onClick={() => setFilterBy('didi')} className={filterBy === 'didi' ? 'active' : ''}>👩‍🏫 Didi</button>
+
+        <h3>🏷️ Tags</h3>
+        <button onClick={() => setTagFilter('all')} className={tagFilter === 'all' ? 'active' : ''}>All</button>
+        <button onClick={() => setTagFilter('finance')} className={tagFilter === 'finance' ? 'active' : ''}>💰 Finance</button>
+        <button onClick={() => setTagFilter('education')} className={tagFilter === 'education' ? 'active' : ''}>📚 Education</button>
+        <button onClick={() => setTagFilter('personal')} className={tagFilter === 'personal' ? 'active' : ''}>👤 Personal</button>
+        <button onClick={() => setTagFilter('other')} className={tagFilter === 'other' ? 'active' : ''}>🔖 Other</button>
+
+        <h3>🔧 Options</h3>
+        <label><input type="checkbox" checked={safeMode} onChange={() => setSafeMode(!safeMode)} /> 🛡️ Safe Mode</label>
+        <label><input type="checkbox" checked={boostMode} onChange={() => setBoostMode(!boostMode)} /> 💪 Boost</label>
+        <button onClick={() => setShowPinnedOnly(!showPinnedOnly)}>{showPinnedOnly ? '📄 All' : '📌 Pinned'}</button>
+      </aside>
+      
+      
+      <div className="main-content container">
+       <header>
+        <button class="sidebar-toggle"
+        onClick={()=> setIsSidebarCollapsed(!isSidebarCollapsed)}
+        >☰
+        </button>
+
         <button className="scroll-toggle" onClick={()=> setAutoScroll(!autoScroll)}>
           {autoScroll ? '⏸️ Pause Scroll' : '▶️ Resume Scroll'}
         </button>
@@ -266,14 +315,9 @@ const highlightMatch = (text)=>{
          onChange={(e)=> setSearchTerm(e.target.value)}
          />
       </div>
-      <div className="filter-button">
-        <button onClick={()=> setFilterBy('all')} className= {filterBy === 'all' ? 'active' : ''}>👥 All</button>
-        <button onClick={()=> setFilterBy('user')} className= {filterBy === 'user' ? 'active' : ''}>🧑‍🎓 You</button>
-        <button onClick={()=> setFilterBy('didi')} className= {filterBy === 'didi' ? 'active' : ''}>👩‍🏫 Didi</button>
-      </div>
+      
 
-      /* safety toolkit */
-      {showToolKit && (
+        {showToolKit && (
         <div className="toolkit-box">
           <h3>🛡️ सुरक्षा और अधिकार टूलकिट</h3>
           <ul>
@@ -285,22 +329,10 @@ const highlightMatch = (text)=>{
           </ul>
         </div>
       )}
-      <div className="tag-filter">
-        <span>🎯 Filter by tag:</span>
-        <button onClick={()=> setTagFilter('all')} className={tagFilter==='all' ? 'active' : ''}>All</button>
-        <button onClick={()=> setTagFilter('finance')} className={tagFilter==='finance' ? 'active' : ''}>💰 Finance</button>
-        <button onClick={()=> setTagFilter('all')} className={tagFilter==='education' ? 'active' : ''}>📚 Education</button>
-        <button onClick={()=> setTagFilter('all')} className={tagFilter==='personal' ? 'active' : ''}>👤 Personal</button>
-        <button onClick={()=> setTagFilter('all')} className={tagFilter==='other' ? 'active' : ''}>🔖 Other</button>
-
-      </div>
+      
 
       
-      <div className="pin-filter">
-        <button onClick={()=> setShowPinnedOnly(!showPinnedOnly)}>
-          {showPinnedOnly ? '📄 Show All' : '📌 Show Pinned Only'}
-        </button>
-      </div>
+      
 
 
       <div className="chat-box">
@@ -319,9 +351,9 @@ const highlightMatch = (text)=>{
                 </div>
               ) : (
                 <>
-                  <div
-                   dangerouslySetInnerHTML={{__html: highlightMatch(msg.text)}}
-                  />
+                  <div>
+                    {highlightMatch(msg.text)}
+                  </div>
                   <button 
                     className= {`pin-btn ${msg.pinned ? 'pinned' : ''}`}
                     onClick={()=>{
@@ -365,7 +397,7 @@ const highlightMatch = (text)=>{
 
       </select>
 
-      /*safe mode */
+   
       <div className="feature-toggles">
         <label>
           <input
@@ -385,7 +417,6 @@ const highlightMatch = (text)=>{
         </label>
       </div>
 
-      /*input-bar */
       <div className="input-bar">
         <input
           type="text"
@@ -417,7 +448,11 @@ const highlightMatch = (text)=>{
         </button>
       </div>
     </div>
+  </div>
+    )}
+    </>
   );
+
 }
 
 export default App;
