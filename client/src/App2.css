@@ -713,10 +713,10 @@ h1 {
 
 /* Ensure toolkit box is displayed properly */
 .app-wrapper.dark .toolkit-box {
-  background-color: #2d2d2d; /* Slightly brighter dark gray */
-  color: #ffeb3b; /* Bright yellow for better readability */
-  border-left: 4px solid #fdd835;
-  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05); /* subtle light glow */
+  background-color: #333333; /* Slightly brighter dark gray */
+  color: #ffe082; /* Bright yellow for better readability */
+  border-left: 4px solid #ffca28;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1); /* subtle light glow */
 }
 
 
@@ -733,7 +733,7 @@ h1 {
 
 .app-wrapper.dark .toolkit-box button,
 .app-wrapper.dark .toolkit-box span {
-  background-color: #3c3c3c;
-  color: #fff176; /* soft yellow */
-  border: 1px solid #fff59d;
+  background-color: #444;
+  color: #fff; /* soft yellow */
+  border: 1px solid #ffb300;
 }
