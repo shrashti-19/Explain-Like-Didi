@@ -76,6 +76,15 @@ A GenAI chatbot that explains complex topics to girls &amp; women in Bharat in a
 #### 📷 Preview
 
 
+## 📷 Preview
+
+### 🖼️ Interface Overview
+
+#### 1. Greeting Screen
+![Greeting UI](client/src/assets/UI_1.png)
+
+#### 2. Sidebar & Chat Interface
+![Sidebar UI](client/src/assets/UI_2.png)
 
 
 
