@@ -1,4 +1,4 @@
-/* ============ Global Styles ============ */
+/* /* ============ Global Styles ============ */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -502,3 +502,534 @@ h1 {
 }
 
 
+ */
+
+
+/* ============ Global Styles ============ */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: #eaeaea;
+  color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #f2f2f2;
+}
+
+.app-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f0f0;
+  color: #000;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============ IMPROVED DARK MODE STYLES ============ */
+
+/* Base dark mode wrapper */
+.app-wrapper.dark {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+/* Chat box improvements */
+.app-wrapper.dark .chat-box {
+  background-color: #0f172a;
+}
+
+/* User bubbles */
+.app-wrapper.dark .bubble.user {
+  background-color: #1e40af !important;
+  color: #f8fafc !important;
+}
+
+/* AI bubbles */
+.app-wrapper.dark .bubble.didi {
+  background-color: #374151 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Input elements */
+.app-wrapper.dark input,
+.app-wrapper.dark select,
+.app-wrapper.dark textarea {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+/* Input focus states */
+.app-wrapper.dark input:focus {
+  border-color: #60a5fa !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+/* Sidebar improvements */
+.app-wrapper.dark .sidebar {
+  background-color: #1e293b;
+  border-right: 1px solid #334155;
+}
+
+/* General buttons */
+.app-wrapper.dark button {
+  background-color: #475569 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #64748b;
+  transition: all 0.2s ease;
+}
+
+.app-wrapper.dark button:hover {
+  background-color: #64748b !important;
+  border: 1px solid #94a3b8;
+}
+
+/* Header adjustments for dark mode */
+.app-wrapper.dark header {
+  background-color: #1e40af !important;
+}
+
+/* ============ Sidebar Styles ============ */
+.sidebar {
+  width: 260px;
+  background-color: #e4e6eb;
+  border-right: 1px solid #ccc;
+  padding: 16px;
+  overflow-y: auto;
+  width: 240px;
+  min-width: 240px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar h4 {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  margin: 4px 0;
+  padding: 10px;
+  text-align: left;
+  background-color: #d0d4ff;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sidebar button.active {
+  background-color: #4258ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Sidebar buttons - dark mode */
+.app-wrapper.dark .sidebar button {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #475569;
+  transition: all 0.2s ease;
+}
+
+/* Sidebar button hover - dark mode */
+.app-wrapper.dark .sidebar button:hover {
+  background-color: #475569 !important;
+  color: #f8fafc !important;
+  border: 1px solid #64748b;
+}
+
+/* Active sidebar button - dark mode */
+.app-wrapper.dark .sidebar button.active {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  font-weight: bold;
+  border: 1px solid #60a5fa;
+}
+
+/* Toolkit Box */
+.sidebar .toolkit-box {
+  background-color: #fff3cd;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ffc107;
+  color: #333;
+}
+
+/* TOOLKIT BOX - SAFETY & MOTIVATION - Dark Mode */
+.app-wrapper.dark .toolkit-box {
+  background-color: #1f2937 !important;
+  color: #fbbf24 !important;
+  border-left: 4px solid #f59e0b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Toolkit box buttons and spans - dark mode */
+.app-wrapper.dark .toolkit-box button,
+.app-wrapper.dark .toolkit-box span {
+  background-color: #374151 !important;
+  color: #fde047 !important;
+  border: 1px solid #facc15 !important;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* Toolkit box hover states - dark mode */
+.app-wrapper.dark .toolkit-box button:hover {
+  background-color: #4b5563 !important;
+  color: #fef08a !important;
+  border: 1px solid #fde047 !important;
+  transform: translateY(-1px);
+}
+
+/* Collapsed sidebar */
+.sidebar.collapsed {
+  transform: translateX(-100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 999;
+  background-color: #fff;
+}
+
+/* Collapsed sidebar in dark mode */
+.app-wrapper.dark .sidebar.collapsed {
+  background-color: #1e293b !important;
+}
+
+/* ============ Main Content ============ */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main-content.expanded {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.container.dark {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+/* ============ Header ============ */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background-color: #405eff;
+  color: #fff;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.theme-toggle,
+.scroll-toggle,
+.toolkit-toggle {
+  background: white;
+  color: #6a8eff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  margin: 6px;
+}
+
+/* ============ Search ============ */
+.search-bar input {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.container.dark .search-bar input {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+/* ============ Chat Messages ============ */
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+
+.container.dark .chat-box {
+  background-color: #0f172a !important;
+}
+
+.bubble {
+  margin: 10px 0;
+  padding: 14px 18px;
+  border-radius: 14px;
+  max-width: 75%;
+  position: relative;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.bubble.user {
+  background-color: #b3d4ff;
+  color: #000;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+.container.dark .bubble.user {
+  background-color: #1e40af !important;
+  color: #f8fafc !important;
+}
+
+.bubble.didi {
+  background-color: #d8d8d8;
+  color: #000;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+.container.dark .bubble.didi {
+  background-color: #374151 !important;
+  color: #f1f5f9 !important;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #888;
+  margin-top: 6px;
+}
+
+.container.dark .timestamp {
+  color: #94a3b8 !important;
+}
+
+.pin-btn,
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 8px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.pin-btn.pinned {
+  color: #ff9800;
+}
+
+.chat-tag {
+  background-color: #d0d0d0;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 6px;
+  color: #222;
+}
+
+.container.dark .chat-tag {
+  background-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.typing-dots span {
+  animation: blink 1s infinite;
+  font-weight: bold;
+  margin: 0 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ============ Input Bar ============ */
+.input-bar {
+  display: flex;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f4f4f4;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.container.dark .input-bar {
+  background-color: #1e293b !important;
+  border-top: 1px solid #334155 !important;
+}
+
+.input-bar input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: border 0.2s ease;
+  background-color: #fff;
+  color: #111;
+}
+
+.input-bar input:focus {
+  border-color: #6a8eff;
+}
+
+.container.dark .input-bar input {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+.container.dark .input-bar input:focus {
+  border-color: #60a5fa !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+.input-bar button {
+  padding: 10px 14px;
+  background-color: #405eff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.input-bar button:hover {
+  background-color: #2e46cc;
+}
+
+.mic-button.glow {
+  animation: pulse 1.2s infinite;
+  background-color: #e66464;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+/* ============ Greeting Screen ============ */
+.greeting-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom right, #ffe5b4, #fff0f5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  text-align: center;
+  padding: 20px;
+}
+
+.greeting-screen h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #a34b00;
+}
+
+.greeting-screen p {
+  font-size: 1.5rem;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+.greeting-screen button {
+  background-color: #ff8c00;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.greeting-screen button:hover {
+  background-color: #ff7000;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 768px) {
+  .container {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .input-bar,
+  header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .input-bar input {
+    width: 100%;
+  }
+  .sidebar {
+    display: none;
+    position: absolute;
+    z-index: 999;
+  }
+  .app-wrapper {
+    flex-direction: column;
+  }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
