@@ -2,6 +2,14 @@
 A GenAI chatbot that explains complex topics to girls &amp; women in Bharat in a warm, simple tone — like an elder sister.
 
 ---
+#### ✅ Live URLs
+🔹 Frontend (User Interface):
+https://explain-like-didi.vercel.app/
+
+🔹 Backend (Gemini API Proxy):
+https://didi-proxy-server.onrender.com
+
+---
 ## ✨ Features
 - 🌗 Light/Dark mode toggle
 - 🧭 Sidebar filters (All / You / Didi)
