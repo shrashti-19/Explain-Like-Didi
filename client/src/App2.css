@@ -713,9 +713,12 @@ h1 {
 
 /* Ensure toolkit box is displayed properly */
 .app-wrapper.dark .toolkit-box {
-  display: block;
-  visibility: visible;
+  background-color: #2d2d2d; /* Slightly brighter dark gray */
+  color: #ffeb3b; /* Bright yellow for better readability */
+  border-left: 4px solid #fdd835;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05); /* subtle light glow */
 }
+
 
 /* Fix span or text overlap/visibility issues */
 .app-wrapper.dark .toolkit-box * {
@@ -728,3 +731,9 @@ h1 {
   display: inline-block;
 }
 
+.app-wrapper.dark .toolkit-box button,
+.app-wrapper.dark .toolkit-box span {
+  background-color: #3c3c3c;
+  color: #fff176; /* soft yellow */
+  border: 1px solid #fff59d;
+}
