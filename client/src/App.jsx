@@ -98,7 +98,7 @@ function App(){
       }
     ];
 
-    const response = await axios.post('http://localhost:5000/didi',{
+    const response = await axios.post('https://didi-proxy-server.onrender.com/didi',{
       contents: chatHistory
     });
 
