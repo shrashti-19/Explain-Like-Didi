@@ -210,7 +210,7 @@ const handleSummarize = async ()=>{
 
   setMessage(prev=> [...prev, {sender: 'didi', text: 'typing', time: ''}]);
   try{
-    const response = await axios.post('http://localhost:5000/didi',{
+    const response = await axios.post('https://didi-proxy-server.onrender.com/didi',{
       contents: chatHistory
     });
 
