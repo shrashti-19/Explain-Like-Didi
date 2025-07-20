@@ -443,6 +443,12 @@ const highlightMatch = (text)=>{
         <button onClick={handleDownload}>
            📥 Save Chat
         </button>
+
+        <button onClick={() => setMessage([])}>
+          🧹 Clear Chat
+        </button>
+
+        
         <button onClick={handleSummarize}>
            🧠 समझाओ पूरा चैट
         </button>
