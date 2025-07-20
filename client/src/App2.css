@@ -473,3 +473,20 @@ h1 {
 }
 
 
+/* Safe Mode & Motivational Boost — Dark mode fixes */
+.app-wrapper.dark .sidebar .toolkit-box {
+  background-color: #2f2f2f !important;
+  color: #f0f0f0 !important;
+  border-left: 4px solid #ffc107;
+}
+
+/* Optional: If you use specific button-like spans inside the toolkit */
+.app-wrapper.dark .toolkit-box button,
+.app-wrapper.dark .toolkit-box span {
+  background-color: #444 !important;
+  color: #fff !important;
+  border: 1px solid #666;
+}
+
+
+
