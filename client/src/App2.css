@@ -710,3 +710,21 @@ h1 {
   padding: 8px 16px;
   border-radius: 6px;
 }
+
+/* Ensure toolkit box is displayed properly */
+.app-wrapper.dark .toolkit-box {
+  display: block;
+  visibility: visible;
+}
+
+/* Fix span or text overlap/visibility issues */
+.app-wrapper.dark .toolkit-box * {
+  color: inherit !important;
+  visibility: visible;
+}
+
+/* Ensure buttons inside aren't collapsing */
+.app-wrapper.dark .toolkit-box button {
+  display: inline-block;
+}
+
