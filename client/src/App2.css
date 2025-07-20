@@ -460,33 +460,45 @@ h1 {
 
 /* Sidebar button in dark mode */
 .app-wrapper.dark .sidebar button {
-  background-color: #333 !important;
-  color: #fff !important;
-  border: 1px solid #666;
+  background-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #4a5568;
+}
+
+/* Hover state for sidebar buttons */
+.app-wrapper.dark .sidebar button:hover {
+  background-color: #374151 !important;
+  color: #f7fafc !important;
+  border: 1px solid #6b7280;
 }
 
 /* Active button dark mode */
 .app-wrapper.dark .sidebar button.active {
-  background-color: #5c7cff !important;
-  color: #fff !important;
+  background-color: #4c63d2 !important;
+  color: #ffffff !important;
   font-weight: bold;
+  border: 1px solid #5c7cff;
 }
 
-
-
-/* 🔧 Dark mode fix for the safety/motivation box */
+/* Dark mode fix for the safety/motivation box */
 .app-wrapper.dark .toolkit-box {
-  background-color: #1a1a1a !important;
-  color: #f8f8f8 !important;
-  border-left: 4px solid #ffcc00 !important;
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-left: 4px solid #f59e0b !important;
 }
 
 .app-wrapper.dark .toolkit-box button,
 .app-wrapper.dark .toolkit-box span {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-  border: 1px solid #555 !important;
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #6b7280 !important;
 }
 
+/* Hover states for toolkit box elements */
+.app-wrapper.dark .toolkit-box button:hover {
+  background-color: #4b5563 !important;
+  color: #ffffff !important;
+  border: 1px solid #9ca3af !important;
+}
 
 
