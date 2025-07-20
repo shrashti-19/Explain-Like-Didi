@@ -526,3 +526,187 @@ h1 {
     width: 100%;
   }
 }
+
+
+/* ============ DARK MODE VISIBILITY FIXES ============ */
+
+/* Tag this chat dropdown/select */
+.app-wrapper.dark select,
+.container.dark select {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.app-wrapper.dark select option {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Input area below tag section */
+.app-wrapper.dark .input-section,
+.container.dark .input-section {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* Input placeholder text */
+.app-wrapper.dark input::placeholder,
+.container.dark input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+/* Action buttons in the input area */
+.app-wrapper.dark .action-button,
+.container.dark .action-button {
+  background-color: #475569 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #64748b !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.app-wrapper.dark .action-button:hover,
+.container.dark .action-button:hover {
+  background-color: #64748b !important;
+  color: #ffffff !important;
+  border: 1px solid #94a3b8 !important;
+}
+
+/* Send button specific styling */
+.app-wrapper.dark .send-button,
+.container.dark .send-button {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border: 1px solid #60a5fa !important;
+}
+
+.app-wrapper.dark .send-button:hover,
+.container.dark .send-button:hover {
+  background-color: #2563eb !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+/* Listen Again button */
+.app-wrapper.dark .listen-button,
+.container.dark .listen-button {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border: 1px solid #10b981 !important;
+}
+
+/* Stop button */
+.app-wrapper.dark .stop-button,
+.container.dark .stop-button {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border: 1px solid #ef4444 !important;
+}
+
+/* Save Chat button */
+.app-wrapper.dark .save-button,
+.container.dark .save-button {
+  background-color: #7c3aed !important;
+  color: #ffffff !important;
+  border: 1px solid #8b5cf6 !important;
+}
+
+/* Bottom action bar/container */
+.app-wrapper.dark .bottom-actions,
+.container.dark .bottom-actions {
+  background-color: #1e293b !important;
+  border-top: 1px solid #334155 !important;
+  padding: 12px 16px;
+}
+
+/* Any form elements in the bottom area */
+.app-wrapper.dark .bottom-form,
+.container.dark .bottom-form {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Text labels in the input area */
+.app-wrapper.dark .input-label,
+.container.dark .input-label {
+  color: #e2e8f0 !important;
+  font-weight: 500;
+}
+
+/* Dropdown arrows and icons */
+.app-wrapper.dark .dropdown-arrow,
+.container.dark .dropdown-arrow {
+  color: #94a3b8 !important;
+}
+
+/* General text visibility in dark mode */
+.app-wrapper.dark .text-content,
+.container.dark .text-content {
+  color: #f1f5f9 !important;
+}
+
+/* Ensure all buttons have minimum contrast */
+.app-wrapper.dark button:not(.active):not(.send-button):not(.listen-button):not(.stop-button):not(.save-button) {
+  background-color: #475569 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #64748b !important;
+  min-height: 40px;
+}
+
+/* Focus states for better visibility */
+.app-wrapper.dark *:focus,
+.container.dark *:focus {
+  outline: 2px solid #60a5fa !important;
+  outline-offset: 2px;
+}
+
+/* Ensure text is always visible */
+.app-wrapper.dark * {
+  text-shadow: none !important;
+}
+
+/* Fix for any invisible text */
+.app-wrapper.dark .hidden-text,
+.container.dark .hidden-text {
+  color: #f1f5f9 !important;
+  opacity: 1 !important;
+}
+
+/* Bottom container general fix */
+.app-wrapper.dark .bottom-container,
+.container.dark .bottom-container {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Input group styling */
+.app-wrapper.dark .input-group,
+.container.dark .input-group {
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* Button group styling */
+.app-wrapper.dark .button-group,
+.container.dark .button-group {
+  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.app-wrapper.dark .button-group button,
+.container.dark .button-group button {
+  min-width: 80px;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
