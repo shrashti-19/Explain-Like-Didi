@@ -456,20 +456,7 @@ h1 {
   background-color: #ff7000;
 }
 
-/* Sidebar button default */
-.sidebar button {
-  display: block;
-  width: 100%;
-  margin: 4px 0;
-  padding: 10px;
-  text-align: left;
-  background-color: #d0d4ff;
-  color: #111;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
+
 
 /* Sidebar button in dark mode */
 .app-wrapper.dark .sidebar button {
