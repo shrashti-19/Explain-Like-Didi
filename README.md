@@ -28,7 +28,7 @@ https://didi-proxy-server.onrender.com
 | Backend   | Node.js + Express        |
 | API       | Google Gemini 2.5 Flash  |
 | Styling   | Vanilla CSS              |
-| Deployment| *(Planned: Vercel + Render)* |
+| Deployment| Vercel + Render |
 
 ---
 
